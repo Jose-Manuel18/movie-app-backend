@@ -1,69 +1,45 @@
 import { PrismaClient, Prisma } from '@prisma/client'
 
 const prisma = new PrismaClient()
-
-const userSeed: Prisma.UserCreateInput[] = [
-  {
-    name: 'Alice',
-    email: 'alice@prisma.io',
-    uid: 'mmmmmmmmmmmmm',
-    likes: {
-      create: [
-        {
-          title: 'John Wick 4',
-          genre: 'Action & Adventure',
-          rating: 10,
-          liked: true,
-          poster:
-            'https://images.unsplash.com/photo-1621274283140-e4450435a76a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2960&q=80',
-        },
-      ],
-    },
-  },
-  {
-    name: 'Bob',
-    email: 'bob@prisma.io',
-    uid: 'mmmmmmmmmmmmm',
-    likes: {
-      create: [
-        {
-          title: 'John Wick 4',
-          genre: 'Action & Adventure',
-          rating: 10,
-          liked: true,
-          poster:
-            'https://images.unsplash.com/photo-1621274283140-e4450435a76a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2960&q=80',
-        },
-      ],
-    },
-  },
-  {
-    name: 'Carol',
-    email: 'carol@prisma.io',
-    uid: 'mmmmmmmmmmmmm',
-    likes: {
-      create: [
-        {
-          title: 'John Wick 4',
-          genre: 'Action & Adventure',
-          rating: 10,
-          liked: true,
-          poster:
-            'https://images.unsplash.com/photo-1621274283140-e4450435a76a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2960&q=80',
-        },
-      ],
-    },
-  },
-]
 async function main() {
-  console.log(`Start seeding ...`)
-  for (const u of userSeed) {
-    const user = await prisma.user.create({
-      data: u,
-    })
-    console.log(`Created user with id: ${user.id}`)
-  }
-  console.log(`Seeding finished.`)
+  const alice = await prisma.user.upsert({
+    where: { email: 'alice@prisma.com' },
+    update: {},
+    create: {
+      email: 'alice@prisma.com',
+      name: 'Alice',
+      uid: 'msfmdsmfmsfmsmd',
+      likes: {
+        create: {
+          title: 'John Wick 4',
+          genre: 'Action',
+          liked: true,
+          poster:
+            'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60',
+          rating: 7.89,
+        },
+      },
+    },
+  })
+  const bob = await prisma.user.upsert({
+    where: { email: 'bob@prisma.com' },
+    update: {},
+    create: {
+      email: 'bob@prisma.com',
+      name: 'Bob',
+      uid: 'msfmdsmfmdadadsadsfmsmd',
+      likes: {
+        create: {
+          title: 'John Wick 4',
+          genre: 'Action',
+          liked: true,
+          poster:
+            'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60',
+          rating: 10,
+        },
+      },
+    },
+  })
 }
 
 main()

@@ -10,6 +10,8 @@ import {
   enumType,
   extendInputType,
   extendType,
+  floatArg,
+  nullable,
 } from 'nexus'
 import { applyMiddleware } from 'graphql-middleware'
 import rp from 'request-promise'
@@ -22,7 +24,7 @@ const Query = objectType({
   definition(t) {
     t.nonNull.list.nonNull.field('allUsers', {
       type: 'User',
-      resolve: (_parent, _args, ctx: Context) => {
+      resolve: (_, __, ctx: Context) => {
         return ctx.prisma.user.findMany()
       },
     })
@@ -37,19 +39,18 @@ const Query = objectType({
         })
       },
     })
-    // t.nullable.field('likeById', {
-    //   type: 'LikeCreateInput',
-    //   args: {
-    //     id: intArg(),
-    //   },
-    //   resolve: (_parent, args, ctx: Context) => {
-    //     return ctx.prisma.like.findMany({
-    //       where: {
-    //         id: args.id || undefined,
-    //       },
-    //     })
-    //   },
-    // })
+    t.nullable.field('likeById', {
+      type: 'Liked',
+
+      resolve: async (parent, args, ctx: Context) => {
+        const userId = await getUserId(ctx)
+        return ctx.prisma.user.findMany({
+          where: {
+            uid: userId,
+          },
+        })
+      },
+    })
   },
 })
 
@@ -99,71 +100,74 @@ const Mutation = objectType({
         }
       },
     })
+
+    t.field('createLike', {
+      type: 'Liked',
+      args: {
+        data: nonNull(
+          arg({
+            type: 'LikeCreateInput',
+          })
+        ),
+      },
+      resolve: async (_, args, ctx: Context) => {
+        const userId = await getUserId(ctx)
+
+        return ctx.prisma.like.create({
+          data: {
+            title: args.data.title,
+            genre: args.data.genre,
+            poster: args.data.poster,
+            rating: args.data.rating,
+            authorId: userId,
+          },
+        })
+      },
+    })
   },
 })
-// const LikeMutation = extendType({
-//   type: 'Mutation',
-//   definition(t) {
-//     t.field('likeMovie', {
-//       type: 'Like',
-//       args: {
-//         data: nonNull(arg({ type: 'LikeCreateInput' })),
-//       },
-//       resolve: (_, args, ctx: Context) => {
-//         const userId = getUserId(ctx)
 
-//         return ctx.prisma.like.create({
-//           data: {
-//             title: args.data.title,
-//             genre: args.data.genre,
-//             poster: args.data.poster,
-//             rating: args.data.rating,
-//             authorId: +userId,
-//           },
-//         })
-//       },
-//     })
-//   },
-// })
 const User = objectType({
   name: 'User',
   definition(t) {
-    t.nonNull.int('id')
-    t.string('name')
+    t.nonNull.string('id')
+    t.nonNull.string('name')
     t.nonNull.string('email')
     t.nonNull.string('uid')
-    // t.nonNull.list.nonNull.field('likes', {
-    //   type: 'Liked',
-    //   resolve: (parent, args, ctx: Context) => {
-    //     return ctx.prisma.user
-    //       .findUnique({
-    //         where: { id: parent.id || undefined },
-    //       })
-    //       .likes()
-    //   },
-    // })
+    t.list.field('likes', {
+      type: 'Liked',
+      resolve: async (parent, args, ctx: Context) => {
+        return ctx.prisma.user
+          .findUnique({
+            where: { id: parent.id || undefined },
+          })
+          .likes()
+      },
+    })
   },
 })
-// const Liked = objectType({
-//   name: 'Liked',
-//   definition(t) {
-//     t.nonNull.int('id')
-//     t.string('title')
-//     t.string('poster')
-//     t.string('genre')
-//     t.int('rating')
-//     t.field('author', {
-//       type: 'User',
-//       resolve: (parent, _, ctx: Context) => {
-//         return ctx.prisma.like
-//           .findUnique({
-//             where: { id: parent.id || undefined },
-//           })
-//           .author()
-//       },
-//     })
-//   },
-// })
+const Liked = objectType({
+  name: 'Liked',
+  definition(t) {
+    t.nonNull.string('id')
+    t.nonNull.string('title')
+    t.nonNull.string('poster')
+    t.nonNull.string('genre')
+    t.nonNull.float('rating')
+    t.nonNull.boolean('liked')
+    t.field('author', {
+      type: 'User',
+      resolve: async (parent, _, ctx: Context) => {
+        return ctx.prisma.like
+          .findUnique({
+            where: { id: parent.id || undefined },
+          })
+          .author()
+      },
+    })
+  },
+})
+
 const AuthPayload = objectType({
   name: 'AuthPayload',
   definition(t) {
@@ -172,15 +176,33 @@ const AuthPayload = objectType({
   },
 })
 
-// const LikeCreateInput = inputObjectType({
-//   name: 'LikeCreateInput',
-//   definition(t) {
-//     t.string('title')
-//     t.string('poster')
-//     t.string('genre')
-//     t.int('rating')
-//   },
-// })
+const LikeCreateInput = inputObjectType({
+  name: 'LikeCreateInput',
+  definition(t) {
+    t.nonNull.string('title')
+    t.nonNull.string('poster')
+    t.nonNull.string('genre')
+    t.nonNull.float('rating')
+  },
+})
+const UserCreateInput = inputObjectType({
+  name: 'UserCreateInput',
+  definition(t) {
+    t.nonNull.string('name')
+    t.nonNull.string('email')
+    t.nonNull.string('uid')
+    t.list.nonNull.field('likes', {
+      type: 'LikeCreateInput',
+    })
+  },
+})
+
+const UserUniqueInput = inputObjectType({
+  name: 'UserUniqueInput',
+  definition(t) {
+    t.string('id'), t.string('name'), t.string('email'), t.string('uid')
+  },
+})
 
 const schemaWithoutPermissions = makeSchema({
   types: [
@@ -188,9 +210,9 @@ const schemaWithoutPermissions = makeSchema({
     Mutation,
     User,
     AuthPayload,
-    // LikeCreateInput,
-    // Liked,
-    // LikeMutation,
+    Liked,
+    LikeCreateInput,
+    UserCreateInput,
   ],
   outputs: {
     schema: __dirname + '/../schema.graphql',

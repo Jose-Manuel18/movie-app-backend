@@ -14,6 +14,18 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  LikeCreateInput: { // input type
+    genre: string; // String!
+    poster: string; // String!
+    rating: number; // Float!
+    title: string; // String!
+  }
+  UserCreateInput: { // input type
+    email: string; // String!
+    likes?: NexusGenInputs['LikeCreateInput'][] | null; // [LikeCreateInput!]
+    name: string; // String!
+    uid: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -32,12 +44,20 @@ export interface NexusGenObjects {
     token?: string | null; // String
     user?: NexusGenRootTypes['User'] | null; // User
   }
+  Liked: { // root type
+    genre: string; // String!
+    id: string; // String!
+    liked: boolean; // Boolean!
+    poster: string; // String!
+    rating: number; // Float!
+    title: string; // String!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
     email: string; // String!
-    id: number; // Int!
-    name?: string | null; // String
+    id: string; // String!
+    name: string; // String!
     uid: string; // String!
   }
 }
@@ -57,17 +77,29 @@ export interface NexusGenFieldTypes {
     token: string | null; // String
     user: NexusGenRootTypes['User'] | null; // User
   }
+  Liked: { // field return type
+    author: NexusGenRootTypes['User'] | null; // User
+    genre: string; // String!
+    id: string; // String!
+    liked: boolean; // Boolean!
+    poster: string; // String!
+    rating: number; // Float!
+    title: string; // String!
+  }
   Mutation: { // field return type
+    createLike: NexusGenRootTypes['Liked'] | null; // Liked
     signup: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
   }
   Query: { // field return type
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
+    likeById: NexusGenRootTypes['Liked'] | null; // Liked
     me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     email: string; // String!
-    id: number; // Int!
-    name: string | null; // String
+    id: string; // String!
+    likes: Array<NexusGenRootTypes['Liked'] | null> | null; // [Liked]
+    name: string; // String!
     uid: string; // String!
   }
 }
@@ -77,16 +109,28 @@ export interface NexusGenFieldTypeNames {
     token: 'String'
     user: 'User'
   }
+  Liked: { // field return type name
+    author: 'User'
+    genre: 'String'
+    id: 'String'
+    liked: 'Boolean'
+    poster: 'String'
+    rating: 'Float'
+    title: 'String'
+  }
   Mutation: { // field return type name
+    createLike: 'Liked'
     signup: 'AuthPayload'
   }
   Query: { // field return type name
     allUsers: 'User'
+    likeById: 'Liked'
     me: 'User'
   }
   User: { // field return type name
     email: 'String'
-    id: 'Int'
+    id: 'String'
+    likes: 'Liked'
     name: 'String'
     uid: 'String'
   }
@@ -94,6 +138,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createLike: { // args
+      data: NexusGenInputs['LikeCreateInput']; // LikeCreateInput!
+    }
     signup: { // args
       email: string; // String!
       name?: string | null; // String
@@ -110,7 +157,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 

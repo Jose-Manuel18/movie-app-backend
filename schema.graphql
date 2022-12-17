@@ -7,18 +7,45 @@ type AuthPayload {
   user: User
 }
 
+input LikeCreateInput {
+  genre: String!
+  poster: String!
+  rating: Float!
+  title: String!
+}
+
+type Liked {
+  author: User
+  genre: String!
+  id: String!
+  liked: Boolean!
+  poster: String!
+  rating: Float!
+  title: String!
+}
+
 type Mutation {
+  createLike(data: LikeCreateInput!): Liked
   signup(email: String!, name: String, password: String!): AuthPayload
 }
 
 type Query {
   allUsers: [User!]!
+  likeById: Liked
   me: User
 }
 
 type User {
   email: String!
-  id: Int!
-  name: String
+  id: String!
+  likes: [Liked]
+  name: String!
+  uid: String!
+}
+
+input UserCreateInput {
+  email: String!
+  likes: [LikeCreateInput!]
+  name: String!
   uid: String!
 }

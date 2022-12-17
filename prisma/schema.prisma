@@ -11,8 +11,8 @@ datasource db {
 }
 
 model User {
-  id Int @id  @default(autoincrement())
-  name String?
+  id String @id  @default(uuid())
+  name String
   email String @unique
   uid String @unique
   likes Like[]
@@ -20,12 +20,12 @@ model User {
 
 }
 model Like {
-  id Int @id @default(autoincrement())
-  title String?
-  poster String?
-  rating Int?
-  genre String?
+  id String @id @default(uuid())
+  title String
+  poster String
+  rating Float
+  genre String
   liked Boolean @default(false)
   author User? @relation(fields: [authorId], references: [id])
-  authorId Int?
+  authorId String?
 }
