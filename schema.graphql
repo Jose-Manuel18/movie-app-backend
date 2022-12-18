@@ -25,13 +25,14 @@ type Liked {
 }
 
 type Mutation {
-  createLike(data: LikeCreateInput!): Liked
+  SaveLike(data: LikeCreateInput!): Liked
   signup(email: String!, name: String, password: String!): AuthPayload
 }
 
 type Query {
   allUsers: [User!]!
   likeById: Liked
+  likeByUser(data: UserUniqueInput!): [Liked]
   me: User
 }
 
@@ -48,4 +49,11 @@ input UserCreateInput {
   likes: [LikeCreateInput!]
   name: String!
   uid: String!
+}
+
+input UserUniqueInput {
+  email: String
+  id: String
+  name: String
+  uid: String
 }
