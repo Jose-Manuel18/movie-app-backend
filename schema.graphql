@@ -7,40 +7,56 @@ type AuthPayload {
   user: User
 }
 
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
 input LikeCreateInput {
-  genre: String!
-  poster: String!
-  rating: Float!
-  title: String!
+  genre: String
+  movie_db_id: Int
+  overview: String
+  poster: String
+  rating: Float
+  title: String
 }
 
 type Liked {
   author: User
-  genre: String!
+  genre: String
   id: String!
   liked: Boolean!
-  poster: String!
-  rating: Float!
-  title: String!
+  likedAt: DateTime!
+  movie_db_id: Int!
+  overview: String
+  poster: String
+  rating: Float
+  title: String
 }
 
 type Mutation {
-  SaveLike(data: LikeCreateInput!): Liked
+  deleteLikeByUser(movie_db_id: Int!): Liked!
+  likeByUser(data: LikeCreateInput): Liked
   signup(email: String!, name: String, password: String!): AuthPayload
 }
 
 type Query {
+  allLikes: [Liked!]!
   allUsers: [User!]!
-  likeById: Liked
-  likeByUser(data: UserUniqueInput!): [Liked]
+  likeById: [Liked]
   me: User
+}
+
+enum SortOrder {
+  asc
+  desc
 }
 
 type User {
   email: String!
   id: String!
-  likes: [Liked]
-  name: String!
+  likes: [Liked!]
+  name: String
   uid: String!
 }
 
@@ -48,7 +64,6 @@ input UserCreateInput {
   email: String!
   likes: [LikeCreateInput!]
   name: String!
-  uid: String!
 }
 
 input UserUniqueInput {

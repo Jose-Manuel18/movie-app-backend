@@ -1,0 +1,30 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:./db.db"
+}
+
+model User {
+    id    String @id @default(cuid())
+    name  String
+    email String @unique
+    uid   String @unique
+    likes Like[]
+}
+
+model Like {
+    id          String   @id @default(cuid())
+    rating      Float?
+    genre       String?
+    title       String?
+    movie_db_id Int      @unique
+    likedAt     DateTime @default(now())
+    liked       Boolean  @default(false)
+    poster      String?
+    overview    String?
+    author      User?    @relation(references: [id], fields: [authorId], onDelete: Cascade)
+    authorId    String?
+}

@@ -5,8 +5,23 @@
 
 
 import type { Context } from "./../context"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    Date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    Date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+  }
+}
 
 
 declare global {
@@ -15,16 +30,17 @@ declare global {
 
 export interface NexusGenInputs {
   LikeCreateInput: { // input type
-    genre: string; // String!
-    poster: string; // String!
-    rating: number; // Float!
-    title: string; // String!
+    genre?: string | null; // String
+    movie_db_id?: number | null; // Int
+    overview?: string | null; // String
+    poster?: string | null; // String
+    rating?: number | null; // Float
+    title?: string | null; // String
   }
   UserCreateInput: { // input type
     email: string; // String!
     likes?: NexusGenInputs['LikeCreateInput'][] | null; // [LikeCreateInput!]
     name: string; // String!
-    uid: string; // String!
   }
   UserUniqueInput: { // input type
     email?: string | null; // String
@@ -35,6 +51,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  SortOrder: "asc" | "desc"
 }
 
 export interface NexusGenScalars {
@@ -43,6 +60,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  DateTime: any
 }
 
 export interface NexusGenObjects {
@@ -51,19 +69,22 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
   }
   Liked: { // root type
-    genre: string; // String!
+    genre?: string | null; // String
     id: string; // String!
     liked: boolean; // Boolean!
-    poster: string; // String!
-    rating: number; // Float!
-    title: string; // String!
+    likedAt: NexusGenScalars['DateTime']; // DateTime!
+    movie_db_id: number; // Int!
+    overview?: string | null; // String
+    poster?: string | null; // String
+    rating?: number | null; // Float
+    title?: string | null; // String
   }
   Mutation: {};
   Query: {};
   User: { // root type
     email: string; // String!
     id: string; // String!
-    name: string; // String!
+    name?: string | null; // String
     uid: string; // String!
   }
 }
@@ -76,7 +97,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
@@ -85,28 +106,32 @@ export interface NexusGenFieldTypes {
   }
   Liked: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
-    genre: string; // String!
+    genre: string | null; // String
     id: string; // String!
     liked: boolean; // Boolean!
-    poster: string; // String!
-    rating: number; // Float!
-    title: string; // String!
+    likedAt: NexusGenScalars['DateTime']; // DateTime!
+    movie_db_id: number; // Int!
+    overview: string | null; // String
+    poster: string | null; // String
+    rating: number | null; // Float
+    title: string | null; // String
   }
   Mutation: { // field return type
-    SaveLike: NexusGenRootTypes['Liked'] | null; // Liked
+    deleteLikeByUser: NexusGenRootTypes['Liked']; // Liked!
+    likeByUser: NexusGenRootTypes['Liked'] | null; // Liked
     signup: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
   }
   Query: { // field return type
+    allLikes: NexusGenRootTypes['Liked'][]; // [Liked!]!
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
-    likeById: NexusGenRootTypes['Liked'] | null; // Liked
-    likeByUser: Array<NexusGenRootTypes['Liked'] | null> | null; // [Liked]
+    likeById: Array<NexusGenRootTypes['Liked'] | null> | null; // [Liked]
     me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     email: string; // String!
     id: string; // String!
-    likes: Array<NexusGenRootTypes['Liked'] | null> | null; // [Liked]
-    name: string; // String!
+    likes: NexusGenRootTypes['Liked'][] | null; // [Liked!]
+    name: string | null; // String
     uid: string; // String!
   }
 }
@@ -121,18 +146,22 @@ export interface NexusGenFieldTypeNames {
     genre: 'String'
     id: 'String'
     liked: 'Boolean'
+    likedAt: 'DateTime'
+    movie_db_id: 'Int'
+    overview: 'String'
     poster: 'String'
     rating: 'Float'
     title: 'String'
   }
   Mutation: { // field return type name
-    SaveLike: 'Liked'
+    deleteLikeByUser: 'Liked'
+    likeByUser: 'Liked'
     signup: 'AuthPayload'
   }
   Query: { // field return type name
+    allLikes: 'Liked'
     allUsers: 'User'
     likeById: 'Liked'
-    likeByUser: 'Liked'
     me: 'User'
   }
   User: { // field return type name
@@ -146,18 +175,16 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    SaveLike: { // args
-      data: NexusGenInputs['LikeCreateInput']; // LikeCreateInput!
+    deleteLikeByUser: { // args
+      movie_db_id: number; // Int!
+    }
+    likeByUser: { // args
+      data?: NexusGenInputs['LikeCreateInput'] | null; // LikeCreateInput
     }
     signup: { // args
       email: string; // String!
       name?: string | null; // String
       password: string; // String!
-    }
-  }
-  Query: {
-    likeByUser: { // args
-      data: NexusGenInputs['UserUniqueInput']; // UserUniqueInput!
     }
   }
 }
@@ -172,7 +199,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 

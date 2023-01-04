@@ -17,7 +17,7 @@ const server = new ApolloServer({
 app.use(
   bodyParser.json(),
   cors({
-    // origin: 'http://localhost:19006',
+    origin: 'http://localhost:19006',
   })
 )
 const serverStartFunction = async () => {
