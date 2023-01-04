@@ -4,7 +4,7 @@ const firebaseServiceAccount = ServiceAccount as admin.ServiceAccount
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseServiceAccount),
-  databaseURL: 'https://authwithfirebaseandnode-default-rtdb.firebaseio.com',
+  databaseURL: `${process.env.databaseURL}`,
 })
 
 export const firebaseAdmin = admin
