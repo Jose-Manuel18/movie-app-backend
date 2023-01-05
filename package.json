@@ -23,6 +23,7 @@
     "@apollo/server": "^4.2.2",
     "@prisma/client": "^4.8.0",
     "@types/node": "^18.11.15",
+    "dotenv": "^16.0.3",
     "firebase-admin": "^11.3.0",
     "graphql": "^16.6.0",
     "graphql-middleware": "^6.1.33",
