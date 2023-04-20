@@ -1,23 +1,43 @@
-import { PrismaClient, Prisma } from '@prisma/client'
-import { faker } from '@faker-js/faker'
+import { PrismaClient, Prisma } from "@prisma/client"
+import { faker } from "@faker-js/faker"
 const prisma = new PrismaClient()
 
 const userData: Prisma.UserCreateInput[] = [
   {
     id: faker.datatype.uuid(),
-    name: 'Alice',
+    name: "Alice",
     email: faker.internet.email(),
-    uid: faker.datatype.uuid(),
+    uid: "qeqoruqwryuqirywuqiyrwuiqyrioeuwi",
     likes: {
       create: [
         {
-          title: 'John Wick 433',
-          genre: 'Action',
+          title: "John Wick 433",
+          genre: "Action",
           liked: true,
           poster:
-            'https://images.unsplash.com/photo-1485846234mmg645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60',
+            "https://images.unsplash.com/photo-1485846234mmg645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60",
           rating: 10,
-          overview: 'dsdsdsdsdsdsdsdsds',
+          overview: "dsdsdsdsdsdsdsdsds",
+          movie_db_id: +faker.random.numeric(2),
+        },
+        {
+          title: "John Wick 433",
+          genre: "Action",
+          liked: true,
+          poster:
+            "https://images.unsplash.com/photo-1485846234mmg645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60",
+          rating: 10,
+          overview: "dsdsdsdsdsdsdsdsds",
+          movie_db_id: +faker.random.numeric(2),
+        },
+        {
+          title: "John Wick 433",
+          genre: "Action",
+          liked: true,
+          poster:
+            "https://images.unsplash.com/photo-1485846234mmg645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60",
+          rating: 10,
+          overview: "dsdsdsdsdsdsdsdsds",
           movie_db_id: +faker.random.numeric(2),
         },
       ],
@@ -25,18 +45,18 @@ const userData: Prisma.UserCreateInput[] = [
   },
   {
     id: faker.datatype.uuid(),
-    name: 'Nilu',
+    name: "Nilu",
     email: faker.internet.email(),
     uid: faker.datatype.uuid(),
     likes: {
       create: [
         {
-          title: 'John Wick 41',
-          genre: 'Action',
+          title: "John Wick 41",
+          genre: "Action",
           liked: true,
-          overview: 'dsfsfsfsfdsfsfs',
+          overview: "dsfsfsfsfdsfsfs",
           poster:
-            'https://images.unsplash.com/photo-14858fsfd46234645-a6mmg2644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60',
+            "https://images.unsplash.com/photo-14858fsfd46234645-a6mmg2644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60",
           rating: 10,
           movie_db_id: +faker.random.numeric(2),
         },
@@ -45,18 +65,18 @@ const userData: Prisma.UserCreateInput[] = [
   },
   {
     id: faker.datatype.uuid(),
-    name: 'Mahmoud',
+    name: "Mahmoud",
     email: faker.internet.email(),
     uid: faker.datatype.uuid(),
     likes: {
       create: [
         {
-          title: 'John Wick 43',
+          title: "John Wick 43",
           liked: true,
-          genre: 'Action',
-          overview: 'hosfdsofsosdsf',
+          genre: "Action",
+          overview: "hosfdsofsosdsf",
           poster:
-            'https://images.unsplash.com/photo-14858462dfsfsfsdfmmg34645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60',
+            "https://images.unsplash.com/photo-14858462dfsfsfsdfmmg34645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWN0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1600&q=60",
           rating: 7.89,
           movie_db_id: +faker.random.numeric(2),
         },

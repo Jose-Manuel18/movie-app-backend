@@ -125,6 +125,7 @@ export interface NexusGenFieldTypes {
     allLikes: NexusGenRootTypes['Liked'][]; // [Liked!]!
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
     likeById: Array<NexusGenRootTypes['Liked'] | null> | null; // [Liked]
+    likeFeed: NexusGenRootTypes['Liked'][]; // [Liked!]!
     me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
@@ -162,6 +163,7 @@ export interface NexusGenFieldTypeNames {
     allLikes: 'Liked'
     allUsers: 'User'
     likeById: 'Liked'
+    likeFeed: 'Liked'
     me: 'User'
   }
   User: { // field return type name
@@ -185,6 +187,11 @@ export interface NexusGenArgTypes {
       email: string; // String!
       name?: string | null; // String
       password: string; // String!
+    }
+  }
+  Query: {
+    likeById: { // args
+      userId?: string | null; // ID
     }
   }
 }

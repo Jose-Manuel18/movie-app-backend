@@ -43,7 +43,8 @@ type Mutation {
 type Query {
   allLikes: [Liked!]!
   allUsers: [User!]!
-  likeById: [Liked]
+  likeById(userId: ID): [Liked]
+  likeFeed: [Liked!]!
   me: User
 }
 
